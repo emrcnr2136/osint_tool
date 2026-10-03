@@ -537,21 +537,21 @@ async function boot(){
 async function refreshIp(){
   $('#publicIp').textContent='loading…'; $('#ipIss').textContent='ISS / provider: resolving…';
   try{
-    const r=await fetch('https://ipinfo.io/json',{cache:'no-store'});
+    const r=await fetch('https://api64.ipify.org?format=json',{cache:'no-store'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     const d=await r.json();
     $('#publicIp').textContent=d.ip||'unavailable';
-    $('#ipIss').textContent='ISS / provider: '+(d.org||'not reported');
-    $('#ipSource').textContent='source: ipinfo.io';
+    $('#ipIss').textContent='ISS / provider: ipify (direct)';
+    $('#ipSource').textContent='source: ipify';
     $('#ipTime').textContent=now();
   }catch(e){
     try{
-      const r=await fetch('https://api64.ipify.org?format=json',{cache:'no-store'});
+      const r=await fetch('https://httpbin.org/ip',{cache:'no-store'});
       if(!r.ok) throw new Error('HTTP '+r.status);
       const d=await r.json();
-      $('#publicIp').textContent=d.ip||'unavailable';
-      $('#ipIss').textContent='ISS / provider: unavailable in fallback';
-      $('#ipSource').textContent='source: ipify fallback';
+      $('#publicIp').textContent=d.origin||'unavailable';
+      $('#ipIss').textContent='ISS / provider: httpbin fallback';
+      $('#ipSource').textContent='source: httpbin';
       $('#ipTime').textContent=now();
     }catch{
       $('#publicIp').textContent='unavailable';
